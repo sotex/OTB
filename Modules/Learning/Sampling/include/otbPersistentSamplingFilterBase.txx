@@ -321,6 +321,7 @@ PersistentSamplingFilterBase<TInputImage,TMaskImage>
             {
             ogr::Feature dstFeature(outLayer.GetLayerDefn());
             dstFeature.SetFrom( *tmpIt, TRUE );
+            dstFeature.SetFID(tmpIt->GetFID());
             outLayer.CreateFeature( dstFeature );
             }
           }
