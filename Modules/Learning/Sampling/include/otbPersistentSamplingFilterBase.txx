@@ -689,7 +689,6 @@ void
 PersistentSamplingFilterBase<TInputImage,TMaskImage>
 ::DispatchInputVectors()
 {
-  std::cout << "DispatchInputVectors() " << std::endl;
   TInputImage* outputImage = this->GetOutput();
   ogr::DataSource* vectors = const_cast<ogr::DataSource*>(this->GetOGRData());
   ogr::Layer inLayer = vectors->GetLayer(m_LayerIndex);
