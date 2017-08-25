@@ -689,6 +689,7 @@ void
 PersistentSamplingFilterBase<TInputImage,TMaskImage>
 ::DispatchInputVectors()
 {
+  std::cout << "DispatchInputVectors() " << std::endl;
   TInputImage* outputImage = this->GetOutput();
   ogr::DataSource* vectors = const_cast<ogr::DataSource*>(this->GetOGRData());
   ogr::Layer inLayer = vectors->GetLayer(m_LayerIndex);
@@ -724,19 +725,28 @@ PersistentSamplingFilterBase<TInputImage,TMaskImage>
     {
     tmpLayers.push_back(this->GetInMemoryInput(i));
     }
-  
+
+  const unsigned int nbFeatThread = std::ceil(inLayer.GetFeatureCount(true) / (float) numberOfThreads);
+
   OGRFeatureDefn &layerDefn = inLayer.GetLayerDefn();
   ogr::Layer::const_iterator featIt = inLayer.begin();
+
+  unsigned int cptFeat = 0;
   unsigned int counter=0;
   for(; featIt!=inLayer.end(); ++featIt)
     {
     ogr::Feature dstFeature(layerDefn);
     dstFeature.SetFrom( *featIt, TRUE );
     dstFeature.SetFID(featIt->GetFID());
+
     tmpLayers[counter].CreateFeature( dstFeature );
-    counter++;
-    if (counter >= tmpLayers.size())
-      counter = 0;
+
+    cptFeat++;
+    if (cptFeat > nbFeatThread)
+      {
+      counter++;
+      cptFeat=0;
+      }
     }
 
   inLayer.SetSpatialFilter(ITK_NULLPTR);
