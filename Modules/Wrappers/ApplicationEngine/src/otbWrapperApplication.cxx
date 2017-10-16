@@ -393,8 +393,7 @@ int Application::Execute()
 
 int Application::ExecuteAndWriteOutput()
 {
-  m_Chrono.Reset();
-  m_Chrono.Start();
+  m_Chrono.Restart();
 
   int status = this->Execute();
 
@@ -472,7 +471,7 @@ int Application::ExecuteAndWriteOutput()
           {
           Parameter* param = GetParameterByKey(key);
           ComplexOutputImageParameter* outputParam = dynamic_cast<ComplexOutputImageParameter*>(param);
-          
+
           if(outputParam!=ITK_NULLPTR)
             {
             outputParam->InitializeWriters();
@@ -880,7 +879,7 @@ void Application::SetListViewSingleSelectionMode(std::string parameter, bool sta
     }
   else
     itkExceptionMacro(<<parameter << "parameter can't be casted to ListView");
-  
+
 }
 
 
@@ -1167,7 +1166,7 @@ void Application::SetParameterInputImage(std::string parameter, InputImageParame
   Parameter* param = GetParameterByKey(parameter);
 
   InputImageParameter* paramDown = dynamic_cast<InputImageParameter*> (param);
-  
+
   if (paramDown)
     {
     paramDown->SetImage(inputImage);
@@ -1181,11 +1180,11 @@ void Application::SetParameterInputImage(std::string parameter, InputImageParame
 OutputImageParameter::ImageBaseType * Application::GetParameterOutputImage(std::string parameter)
 {
   Parameter* param = GetParameterByKey(parameter);
-  
+
   OutputImageParameter* paramDown = dynamic_cast<OutputImageParameter*> (param);
-  
+
   if (paramDown)
-    {    
+    {
     return paramDown->GetValue();
     }
   else
@@ -1200,7 +1199,7 @@ void Application::SetParameterComplexInputImage(std::string parameter, ComplexIn
   Parameter* param = GetParameterByKey(parameter);
 
   ComplexInputImageParameter* paramDown = dynamic_cast<ComplexInputImageParameter*> (param);
-  
+
   if (paramDown)
     {
     paramDown->SetImage(inputImage);
@@ -1214,11 +1213,11 @@ void Application::SetParameterComplexInputImage(std::string parameter, ComplexIn
 ComplexOutputImageParameter::ImageBaseType * Application::GetParameterComplexOutputImage(std::string parameter)
 {
   Parameter* param = GetParameterByKey(parameter);
-  
+
   ComplexOutputImageParameter* paramDown = dynamic_cast<ComplexOutputImageParameter*> (param);
-  
+
   if (paramDown)
-    {    
+    {
     return paramDown->GetValue();
     }
   else
@@ -1230,9 +1229,9 @@ ComplexOutputImageParameter::ImageBaseType * Application::GetParameterComplexOut
 void Application::AddImageToParameterInputImageList(std::string parameter, InputImageListParameter::ImageBaseType * img)
 {
   Parameter* param = GetParameterByKey(parameter);
-  
+
   InputImageListParameter * paramDown = dynamic_cast<InputImageListParameter *>(param);
-  
+
   if(paramDown)
     {
     paramDown->AddImage(img);
@@ -1241,7 +1240,7 @@ void Application::AddImageToParameterInputImageList(std::string parameter, Input
     {
     itkExceptionMacro(<<parameter << "parameter can't be casted to InputImageListParameter");
     }
-  
+
 }
 
 void Application::SetNthParameterInputImageList(std::string parameter, const unsigned int &id, InputImageListParameter::ImageBaseType * img)
@@ -1264,9 +1263,9 @@ void Application::SetNthParameterInputImageList(std::string parameter, const uns
 void Application::AddParameterStringList(std::string parameter, const std::string & str)
 {
   Parameter* param = GetParameterByKey(parameter);
-  
+
   InputImageListParameter * paramDown = dynamic_cast<InputImageListParameter *>(param);
-  
+
   if(paramDown)
     {
     paramDown->AddFromFileName(str);
@@ -1275,7 +1274,7 @@ void Application::AddParameterStringList(std::string parameter, const std::strin
     {
     itkExceptionMacro(<<parameter << "parameter can't be casted to InputImageListParameter");
     }
-  
+
 }
 
 void Application::SetNthParameterStringList(std::string parameter, const unsigned int &id, const std::string & str)
@@ -1679,7 +1678,7 @@ std::string Application::GetProgressDescription() const
 
 double Application::GetLastExecutionTiming() const
 {
-  return m_Chrono.GetTotal();
+  return m_Chrono.GetElapsedMilliseconds() / 1000.0;
 }
 
 }
